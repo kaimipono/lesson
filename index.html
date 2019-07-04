@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Weather App</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Real-time weather app</h1>
+    <div>
+        <input type="text" placeholder="Enter city">
+        <!-- <select name="day" id="day">
+            <option value="today" selected>Today</option>
+            <option value="tomorrow">Tomorrow</option>
+            <option value="overmorrow">A day after tomorrow</option>
+            <option value="a-week-today">A week today</option>
+        </select> -->
+        <button>Submit</button>
+    </div>
+    <p class="message"></p>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let socket = io.connect();
+        let selectedCity;
+        document.querySelector('button').addEventListener('click', event => {
+            console.log('clicked!!!');
+            selectedCity = capitalizeFirst(document.querySelector('input').value);
+            console.log('selectedCity: ', selectedCity);
+            socket.emit('city choice', selectedCity);
+        });
+        socket.on('ApiResponse', temp => {
+            let message = `It's ${temp} degrees in ${selectedCity}!`;
+            document.querySelector('.message').innerText = message;
+        });
+
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+    </script>
+</body>
+</html>
