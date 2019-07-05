@@ -24,10 +24,11 @@ async function hasRecord(key) {
 
 async function setRecord(key, getValue) {
     let value = await getValue(key);
-    db.collection('cities').insertOne({
-        city: key,
+    await db.collection('cities').updateOne({ city: key }, {$set: {
         temperature: value,
         createdDate: new Date()
+    }}, {
+        upsert: true
     });
 }
 
